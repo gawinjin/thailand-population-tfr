@@ -88,7 +88,9 @@ h3 { font-size: 21px; margin-bottom: 12px; }
 .section-header { margin-bottom: 22px; }
 .section-note { max-width: 760px; color: #475569; font-size: 16px; line-height: 1.55; }
 .chart-card { padding: 18px; min-height: 260px; }
+.chart-card .recharts-wrapper { touch-action: manipulation; }
 .chart-footer { color: #475569; border-top: 1px solid #ebe6d9; padding-top: 12px; font-size: 14px; line-height: 1.45; }
+.mobile-data-panel { display: none; }
 
 .control-row, .preset-row, .download-row {
   display: flex;
@@ -104,6 +106,7 @@ button {
   padding: 8px 10px;
   cursor: pointer;
   text-align: left;
+  min-height: 40px;
 }
 button.active, .tier.active { background: #1f2933; color: #fff; border-color: #1f2933; }
 
@@ -183,6 +186,7 @@ input, select {
 .cause-node.outcome { border-color: #b44745; }
 .dimmed { opacity: 0.28; }
 .dimmed-edge { opacity: 0.16; }
+.mobile-cause-list { display: none; }
 
 .evidence-grid {
   display: grid;
@@ -222,9 +226,130 @@ input, select {
 
 @media (max-width: 620px) {
   .hero, .section { padding-left: 16px; padding-right: 16px; }
-  .hero-copy { padding-top: 42px; }
+  .topnav {
+    gap: 8px;
+    margin: 0 -16px;
+    padding: 10px 16px;
+    scrollbar-width: none;
+  }
+  .topnav::-webkit-scrollbar { display: none; }
+  .topnav a {
+    border: 1px solid #ded8ca;
+    border-radius: 999px;
+    background: #fffdf8;
+    padding: 8px 10px;
+  }
+  .hero-copy { padding-top: 38px; padding-bottom: 18px; }
   h1 { font-size: 44px; }
+  h2 { font-size: 31px; }
+  h3 { font-size: 19px; }
   .subtitle { font-size: 20px; }
+  .lede { font-size: 17px; line-height: 1.5; }
   .stat-grid, .policy-grid, .evidence-grid, .thresholds { grid-template-columns: 1fr; }
+  .stat {
+    min-height: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 12px;
+    align-items: baseline;
+  }
+  .stat span, .stat small { grid-column: 1; }
+  .stat strong {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    max-width: 42vw;
+    margin: 0;
+    text-align: right;
+    font-size: 20px;
+  }
+  .section { padding-top: 42px; padding-bottom: 42px; }
+  .section-header { margin-bottom: 16px; }
+  .chart-card {
+    padding: 12px;
+    overflow: hidden;
+  }
+  .chart-footer {
+    margin-top: 10px;
+    font-size: 13px;
+  }
+  .control-row, .preset-row, .download-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .control-row.wrap, .preset-row { grid-template-columns: 1fr; }
+  button {
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 11px;
+  }
+  .mobile-data-panel {
+    display: grid;
+    gap: 5px;
+    margin-top: 10px;
+    padding: 12px;
+    border: 1px solid #ded8ca;
+    border-radius: 8px;
+    background: #f7f5ef;
+    line-height: 1.35;
+  }
+  .mobile-data-panel span,
+  .mobile-data-panel small {
+    color: #65758b;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .mobile-data-panel strong {
+    font-size: 15px;
+    overflow-wrap: anywhere;
+  }
+  .calc-controls, .scenario-controls, .inspector, .calc-output {
+    padding: 14px;
+  }
+  .calc-output { min-height: auto; }
+  .calc-output h3 {
+    font-size: 30px;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+  }
+  input, select {
+    min-height: 44px;
+    font-size: 16px;
+  }
+  input[type="range"] {
+    padding-left: 0;
+    padding-right: 0;
+  }
   .inspector dl { grid-template-columns: 1fr; }
+  .flow-shell { display: none; }
+  .mobile-cause-list {
+    display: grid;
+    gap: 8px;
+  }
+  .mobile-cause-card {
+    display: grid;
+    gap: 6px;
+    min-height: 0;
+    border-color: #ded8ca;
+    background: #fff;
+  }
+  .mobile-cause-card span,
+  .mobile-cause-card small {
+    color: #65758b;
+    font-size: 12px;
+  }
+  .mobile-cause-card.active span,
+  .mobile-cause-card.active small {
+    color: #dbe2ea;
+  }
+  .source-list button,
+  .tier {
+    min-height: 0;
+  }
+  .thresholds > div,
+  .policy-card,
+  .gap {
+    padding: 14px;
+  }
+  .tooltip { max-width: min(300px, calc(100vw - 42px)); }
 }

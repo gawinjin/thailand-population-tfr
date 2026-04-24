@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { CartesianGrid, Cell, Legend, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis } from "recharts";
 import { fertilitySources } from "../data/fertilitySources";
+import { useMediaQuery } from "../lib/useMediaQuery";
 import type { FertilitySource } from "../types";
 import { ChartChrome } from "./ChartChrome";
 
@@ -29,27 +30,33 @@ function TfrTooltip({ active, payload }: any) {
 export function FertilitySourceComparison() {
   const [filter, setFilter] = useState("all");
   const [selected, setSelected] = useState<FertilitySource>(fertilitySources[2]);
+  const isMobile = useMediaQuery("(max-width: 620px)");
   const types = useMemo(() => ["all", ...Array.from(new Set(fertilitySources.map((item) => item.type)))], []);
   const data = filter === "all" ? fertilitySources : fertilitySources.filter((item) => item.type === filter);
+
+  function applyFilter(type: string) {
+    setFilter(type);
+    setSelected(type === "all" ? fertilitySources[2] : fertilitySources.find((item) => item.type === type) ?? fertilitySources[2]);
+  }
 
   return (
     <div className="split">
       <ChartChrome footer="Registered births are counts. TFR is a synthetic rate calculated from age-specific fertility rates. These are not the same object.">
         <div className="control-row wrap">
           {types.map((type) => (
-            <button key={type} className={filter === type ? "active" : ""} onClick={() => setFilter(type)}>
+            <button key={type} className={filter === type ? "active" : ""} onClick={() => applyFilter(type)}>
               {type.replaceAll("_", " ")}
             </button>
           ))}
         </div>
-        <ResponsiveContainer width="100%" height={360}>
-          <ScatterChart margin={{ top: 18, right: 18, bottom: 12, left: 8 }}>
+        <ResponsiveContainer width="100%" height={isMobile ? 300 : 360}>
+          <ScatterChart margin={isMobile ? { top: 12, right: 4, bottom: 0, left: -18 } : { top: 18, right: 18, bottom: 12, left: 8 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e1ded5" />
-            <XAxis dataKey="year" type="number" domain={[2022, 2027]} allowDecimals={false} />
+            <XAxis dataKey="year" type="number" domain={[2022, 2027]} allowDecimals={false} tick={{ fontSize: isMobile ? 11 : 12 }} />
             <YAxis dataKey="tfr" type="number" domain={[0.65, 1.3]} />
             <ZAxis range={[140, 220]} />
             <Tooltip content={<TfrTooltip />} />
-            <Legend />
+            {!isMobile ? <Legend /> : null}
             <Scatter data={data} name="Source-discontinuous TFR estimates" onClick={(row) => setSelected(row)}>
               {data.map((entry) => (
                 <Cell key={`${entry.source}-${entry.tfr}`} fill={colors[entry.type]} stroke={entry.status === "unverified" ? "#111827" : colors[entry.type]} strokeDasharray={entry.status === "unverified" ? "3 3" : undefined} />
@@ -57,6 +64,11 @@ export function FertilitySourceComparison() {
             </Scatter>
           </ScatterChart>
         </ResponsiveContainer>
+        <div className="mobile-data-panel" aria-live="polite">
+          <span>{selected.year}</span>
+          <strong>{selected.source}: TFR {selected.tfr}</strong>
+          <small>{selected.confidence.replaceAll("_", " ")}</small>
+        </div>
       </ChartChrome>
       <aside className="inspector">
         <p className="eyebrow">Source reconciliation</p>

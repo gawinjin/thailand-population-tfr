@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
-import { Bar, BarChart, CartesianGrid, ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, CartesianGrid, ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { buildProjection, calculateCumulativeNaturalChange, findThresholdYear } from "../lib/calculations";
 import { formatNumber } from "../lib/formatters";
+import { useMediaQuery } from "../lib/useMediaQuery";
 import { ChartChrome } from "./ChartChrome";
 import { CustomTooltip } from "./CustomTooltip";
 
@@ -18,9 +19,12 @@ export function ScenarioExplorer() {
   const [birthRate, setBirthRate] = useState(-4);
   const [deathMode, setDeathMode] = useState(0);
   const [endYear, setEndYear] = useState(2040);
+  const [selectedYear, setSelectedYear] = useState(2030);
+  const isMobile = useMediaQuery("(max-width: 620px)");
   const projection = useMemo(() => buildProjection(startBirths, 559684, birthRate / 100, deathMode / 100, 2025, endYear), [startBirths, birthRate, deathMode, endYear]);
   const thresholds = [400000, 350000, 300000].map((threshold) => [threshold, findThresholdYear(projection, threshold)] as const);
   const cumulative = calculateCumulativeNaturalChange(projection);
+  const selected = projection.find((row) => row.year === selectedYear) ?? projection.at(-1)!;
 
   function applyPreset(preset: (typeof presets)[number]) {
     if (preset.rate !== null) setBirthRate(preset.rate * 100);
@@ -37,18 +41,23 @@ export function ScenarioExplorer() {
         <div className="preset-row">{presets.map((preset) => <button key={preset.label} onClick={() => applyPreset(preset)}>{preset.label}</button>)}</div>
       </div>
       <ChartChrome footer="Arithmetic scenario, not official projection. Birth and death paths are simple compound arithmetic assumptions.">
-        <ResponsiveContainer width="100%" height={390}>
-          <ComposedChart data={projection}>
+        <ResponsiveContainer width="100%" height={isMobile ? 310 : 390}>
+          <ComposedChart data={projection} margin={isMobile ? { top: 12, right: 4, left: -20, bottom: 0 } : undefined} onClick={(event) => event?.activePayload?.[0]?.payload?.year && setSelectedYear(event.activePayload[0].payload.year)}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e1ded5" />
-            <XAxis dataKey="year" />
+            <XAxis dataKey="year" interval={isMobile ? 1 : 0} tick={{ fontSize: isMobile ? 11 : 12 }} />
             <YAxis />
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
+            {!isMobile ? <Legend /> : null}
             <Bar dataKey="natural_change" name="Natural change" fill="#b44745" opacity={0.34} />
             <Line dataKey="births" name="Projected births" stroke="#2f6f73" strokeWidth={3} dot={false} />
             <Line dataKey="deaths" name="Projected deaths" stroke="#8a5a44" strokeWidth={3} dot={false} />
           </ComposedChart>
         </ResponsiveContainer>
+        <div className="mobile-data-panel" aria-live="polite">
+          <span>{selected.year}</span>
+          <strong>Births {formatNumber(selected.births)} / deaths {formatNumber(selected.deaths)}</strong>
+          <small>Natural change {formatNumber(selected.natural_change)}</small>
+        </div>
       </ChartChrome>
       <div className="thresholds">
         {thresholds.map(([threshold, year]) => <div key={threshold}><span>Below {formatNumber(threshold)}</span><strong>{year ?? "not by end"}</strong></div>)}

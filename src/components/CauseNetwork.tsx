@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import ReactFlow, { Background, Controls, Edge, Node } from "reactflow";
 import { causeEdges, causeNodes } from "../data/causeNetwork";
+import { useMediaQuery } from "../lib/useMediaQuery";
 import type { CauseNode } from "../types";
 
 const layerX: Record<CauseNode["layer"], number> = { surface: 40, structural: 310, deep: 310, outcome: 600, feedback: 820 };
@@ -27,6 +28,7 @@ const modes = {
 export function CauseNetwork() {
   const [mode, setMode] = useState<keyof typeof modes>("structural");
   const [selected, setSelected] = useState<CauseNode>(causeNodes[3]);
+  const isMobile = useMediaQuery("(max-width: 620px)");
   const visibleIds = new Set(modes[mode]);
   const nodes: Node[] = useMemo(() => causeNodes.map((node) => ({
     id: node.id,
@@ -43,18 +45,40 @@ export function CauseNetwork() {
     animated: false,
     className: visibleIds.has(edge.from) && visibleIds.has(edge.to) ? "" : "dimmed-edge"
   })), [mode]);
+  const visibleNodes = causeNodes.filter((node) => visibleIds.has(node.id));
+  const visibleEdges = causeEdges.filter((edge) => visibleIds.has(edge.from) && visibleIds.has(edge.to));
+
+  function changeMode(nextMode: keyof typeof modes) {
+    setMode(nextMode);
+    setSelected(causeNodes.find((node) => modes[nextMode].includes(node.id)) ?? causeNodes[0]);
+  }
 
   return (
     <div className="cause-layout">
       <div className="control-row wrap">
-        {Object.keys(modes).map((item) => <button key={item} className={mode === item ? "active" : ""} onClick={() => setMode(item as keyof typeof modes)}>{item.replace("_", " ")} view</button>)}
+        {Object.keys(modes).map((item) => <button key={item} className={mode === item ? "active" : ""} onClick={() => changeMode(item as keyof typeof modes)}>{item.replace("_", " ")} view</button>)}
       </div>
-      <div className="flow-shell">
-        <ReactFlow nodes={nodes} edges={edges} fitView onNodeClick={(_, node) => setSelected(causeNodes.find((item) => item.id === node.id)!)} nodesDraggable={false} panOnScroll zoomOnScroll={false}>
-          <Background color="#ddd7c8" />
-          <Controls showInteractive={false} />
-        </ReactFlow>
-      </div>
+      {isMobile ? (
+        <div className="mobile-cause-list">
+          {visibleNodes.map((node) => {
+            const outgoing = visibleEdges.filter((edge) => edge.from === node.id);
+            return (
+              <button key={node.id} className={`mobile-cause-card ${selected.id === node.id ? "active" : ""}`} onClick={() => setSelected(node)}>
+                <span>{node.layer} / {node.evidence_strength.replace("_", " ")}</span>
+                <strong>{node.label}</strong>
+                {outgoing.length ? <small>Leads to {outgoing.map((edge) => causeNodes.find((item) => item.id === edge.to)?.label).join(", ")}</small> : null}
+              </button>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="flow-shell">
+          <ReactFlow nodes={nodes} edges={edges} fitView onNodeClick={(_, node) => setSelected(causeNodes.find((item) => item.id === node.id)!)} nodesDraggable={false} panOnScroll zoomOnScroll={false}>
+            <Background color="#ddd7c8" />
+            <Controls showInteractive={false} />
+          </ReactFlow>
+        </div>
+      )}
       <aside className="inspector">
         <p className="eyebrow">{selected.layer} cause</p>
         <h3>{selected.label}</h3>
