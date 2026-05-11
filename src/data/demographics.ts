@@ -11,7 +11,7 @@ export const demographicRows: DemographicRow[] = [
   { year: 2022, registered_births: 502107, registered_deaths: 595965, natural_change: -93858, year_end_population: 66090475, status: "official_compiled", cutoff: "2022-12-31", source_note: "NSO Statistical Yearbook / DOPA registration" },
   { year: 2023, registered_births: 517934, registered_deaths: 565992, natural_change: -48058, year_end_population: 66052615, status: "official_compiled", cutoff: "2023-12-31", source_note: "NSO Statistical Yearbook / DOPA registration" },
   { year: 2024, registered_births: 462240, registered_deaths: 571646, natural_change: -109406, year_end_population: 65951210, status: "official_compiled", cutoff: "2024-12-31", source_note: "NSO Statistical Yearbook / DOPA registration" },
-  { year: 2025, registered_births: 416514, registered_deaths: 559684, natural_change: -143170, year_end_population: 65809011, status: "current_dopa_cited_provisional", cutoff: "2025-12-31", source_note: "Thai reporting citing DOPA; treat as current/provisional until official yearbook publication" }
+  { year: 2025, registered_births: 416574, registered_deaths: 559684, natural_change: -143110, year_end_population: 65809011, status: "current_dopa_cited_provisional", cutoff: "2025-12-31", source_note: "DOPA/BORA provisional year-end registration count cited by current Thai reporting; verify against finalized MOPH/NSO yearbook when published" }
 ];
 
 export const enrichedDemographics = enrichDemographics(demographicRows);

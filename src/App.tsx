@@ -29,7 +29,7 @@ export function App() {
       <Section id="tfr" eyebrow="Fertility rate source reconciliation" question="Why do different sources report different fertility rates?" note="Total fertility rate is not a birth count. It is a synthetic measure based on age-specific fertility rates.">
         <FertilitySourceComparison />
       </Section>
-      <Section id="stress-test" eyebrow="0.78 claim stress test" question="Is a 0.78 TFR claim realistic, official, or a downside scenario?" note="The 0.78 figure is plausible as a downside scenario, but the current research does not validate it as Thailand's official 2026 fertility rate.">
+      <Section id="stress-test" eyebrow="0.78 claim stress test" question="Is a 0.78 TFR claim data, projection, or viral extrapolation?" note="The 0.78 figure is not validated as Thailand's official 2026 fertility rate. Treat it only as an unverified stress test unless a primary source is found.">
         <ClaimStressTester />
       </Section>
       <Section id="causes" eyebrow="Cause system map" question="Is the cause simply that people do not want children?" note="The surface story is cost of living. The deeper story is that family formation has become a high-risk household project.">

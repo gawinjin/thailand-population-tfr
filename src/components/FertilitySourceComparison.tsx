@@ -81,8 +81,8 @@ export function FertilitySourceComparison() {
         </dl>
         <p>{selected.note}</p>
         <div className="verdict">
-          <strong>Best-supported current benchmark: 0.86, Mahidol IPSR 2026.</strong>
-          <span>0.78: plausible downside scenario, not validated as official consensus.</span>
+          <strong>Best-supported current benchmark: 0.86, Mahidol IPSR Population Gazette 2026.</strong>
+          <span>0.78: unverified social-media extrapolation. Keep it out of official charts except as a clearly labeled stress test.</span>
         </div>
       </aside>
     </div>

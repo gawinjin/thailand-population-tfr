@@ -3,7 +3,7 @@ import { classifyScenarioDecline, estimateBirthsFromTfrRatio } from "../lib/calc
 import { formatNumber, formatPercent } from "../lib/formatters";
 
 export function ClaimStressTester() {
-  const [baselineBirths, setBaselineBirths] = useState(416514);
+  const [baselineBirths, setBaselineBirths] = useState(416574);
   const [targetTfr, setTargetTfr] = useState(0.78);
   const [benchmarkTfr, setBenchmarkTfr] = useState(0.86);
   const [benchmarkBirths, setBenchmarkBirths] = useState(373000);
@@ -22,11 +22,11 @@ export function ClaimStressTester() {
         <label>Benchmark implied births<input type="number" value={benchmarkBirths} onChange={(e) => setBenchmarkBirths(Number(e.target.value))} /></label>
       </div>
       <div className="calc-output">
-        <p className="eyebrow">0.78 verdict</p>
+        <p className="eyebrow">0.78 claim check</p>
         <h3>{formatNumber(result.impliedBirths)} implied births</h3>
         <p>To reach this stress case under the simple proportional assumption, births would need to fall {formatPercent(-result.decline)} from the 2025 level.</p>
         <div className={`scenario-badge ${result.classification}`}>{result.classification.replaceAll("_", " ")}</div>
-        <p className="warning">This is a heuristic stress test, not an official TFR calculation. True TFR requires age-specific fertility rates and female population exposure by age.</p>
+        <p className="warning">This is a heuristic stress test for an unverified social-media claim, not an official TFR calculation. True TFR requires age-specific fertility rates and female population exposure by age.</p>
       </div>
     </div>
   );

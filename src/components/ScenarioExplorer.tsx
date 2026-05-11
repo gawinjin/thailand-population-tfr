@@ -11,11 +11,11 @@ const presets = [
   { label: "Status quo decline", rate: -0.04, births2026: null },
   { label: "Accelerated decline", rate: -0.08, births2026: null },
   { label: "0.86 benchmark", rate: null, births2026: 373000 },
-  { label: "0.78 stress", rate: null, births2026: 339000 }
+  { label: "0.78 unverified stress", rate: null, births2026: 339000 }
 ];
 
 export function ScenarioExplorer() {
-  const [startBirths, setStartBirths] = useState(416514);
+  const [startBirths, setStartBirths] = useState(416574);
   const [birthRate, setBirthRate] = useState(-4);
   const [deathMode, setDeathMode] = useState(0);
   const [endYear, setEndYear] = useState(2040);

@@ -15,7 +15,7 @@ export function HeroStats() {
     ["First deaths > births", String(crossover), "registration-based"],
     ["2025 natural change", formatNumber(latest.natural_change), latest.status.replaceAll("_", " ")],
     ["Mahidol 2026 TFR", "0.86", "expert estimate"],
-    ["0.78 claim", "unverified", "low-side scenario"]
+    ["0.78 claim", "unverified", "social-media extrapolation"]
   ];
 
   return (
@@ -29,7 +29,7 @@ export function HeroStats() {
         <p className="eyebrow">Interactive research report</p>
         <h1>Thailand's fertility collapse</h1>
         <p className="subtitle">From low births to natural population decline</p>
-        <p className="lede">Thailand's demographic shift is no longer only about fewer children. Since 2021, registered deaths have exceeded registered births every year. Births fell from 704,058 in 2016 to 416,514 in 2025.</p>
+        <p className="lede">Thailand's demographic shift is no longer only about fewer children. Since 2021, registered deaths have exceeded registered births every year. Births fell from 704,058 in 2016 to 416,574 in 2025.</p>
       </div>
       <div className="stat-grid">
         {stats.map(([label, value, meta]) => (

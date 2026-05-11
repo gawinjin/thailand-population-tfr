@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const gaps = [
   ["Full official 2026 TFR is not available yet", "Prevents declaring any 2026 value official.", "Final births by mother age and exposure denominators."],
-  ["0.78 origin is not verified as official", "It may be a scenario or social-media estimate.", "Original method, source table, publication status."],
+  ["0.78 origin is not verified as official", "It appears to be an unsourced social-media extrapolation, not a Mahidol, DOPA, NSO, MOPH, UN, or World Bank figure.", "Original method, source table, publication status."],
   ["TFR requires age-specific fertility rates", "Birth counts alone cannot produce a valid TFR.", "Births by mother age and female population by age."],
   ["DOPA dashboards may not expose full TFR inputs", "Administrative counts and TFR are different objects.", "Downloadable age-specific birth tables."],
   ["NSO/MOPH publications lag", "Official compilations may be behind current public claims.", "Latest official yearbook and health statistics."],

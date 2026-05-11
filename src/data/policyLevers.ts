@@ -2,8 +2,8 @@ import type { PolicyLever } from "../types";
 
 export const policyLevers: PolicyLever[] = [
   { title: "Childcare 0-3", target: ["weak_childcare", "work_care_conflict"], horizon: "near to medium term", fiscalIntensity: "high", evidenceConfidence: "high", caveat: "Must be accessible, affordable, and trusted." },
-  { title: "Parental leave", target: ["work_care_conflict", "gendered_care"], horizon: "near term", fiscalIntensity: "medium", evidenceConfidence: "medium_high", caveat: "Design must avoid reinforcing employer bias against women." },
-  { title: "Paternity leave", target: ["gendered_care"], horizon: "near term", fiscalIntensity: "medium", evidenceConfidence: "medium", caveat: "Needs high take-up and workplace protection." },
+  { title: "Parental leave", target: ["work_care_conflict", "gendered_care"], horizon: "near term", fiscalIntensity: "medium", evidenceConfidence: "medium_high", caveat: "Thailand's 2025 reform extends maternity leave to 120 days; effects on births will not be observable until later cohorts." },
+  { title: "Spouse / paternity leave", target: ["gendered_care"], horizon: "near term", fiscalIntensity: "medium", evidenceConfidence: "medium", caveat: "The 2025 reform adds 15 days paid spouse leave. Impact depends on take-up, workplace protection, and whether fathers actually use it." },
   { title: "Flexible work", target: ["work_care_conflict"], horizon: "near term", fiscalIntensity: "low_medium", evidenceConfidence: "medium", caveat: "Least useful for workers without bargaining power." },
   { title: "Young-family housing", target: ["cost_of_living", "delayed_marriage"], horizon: "medium term", fiscalIntensity: "high", evidenceConfidence: "medium", caveat: "Housing support must reach family-formation ages." },
   { title: "Debt relief / financial stability", target: ["debt", "cost_of_living"], horizon: "near term", fiscalIntensity: "medium_high", evidenceConfidence: "medium", caveat: "May ease constraints but does not solve care infrastructure." },
