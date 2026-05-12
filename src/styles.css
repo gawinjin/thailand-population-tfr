@@ -70,8 +70,13 @@ h3 { font-size: 21px; margin-bottom: 12px; }
 
 .stat, .chart-card, .inspector, .policy-card, .gap, .tier, .thresholds > div, .calc-output {
   background: #fff;
-  border: 1px solid #ded8ca;
-  border-radius: 8px;
+  border: 1px solid #e6e1d1;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.chart-card, .inspector {
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06);
 }
 
 .stat { padding: 14px; min-height: 118px; }
@@ -89,6 +94,9 @@ h3 { font-size: 21px; margin-bottom: 12px; }
 .section-note { max-width: 760px; color: #475569; font-size: 16px; line-height: 1.55; }
 .chart-card { padding: 18px; min-height: 260px; }
 .chart-card .recharts-wrapper { touch-action: manipulation; }
+.chart-card .recharts-cartesian-axis-tick text { fill: #475569; font-weight: 500; }
+.chart-card .recharts-legend-item-text { color: #334155 !important; font-size: 13px; }
+.chart-card .recharts-reference-line line { stroke-dasharray: 4 4; }
 .chart-footer { color: #475569; border-top: 1px solid #ebe6d9; padding-top: 12px; font-size: 14px; line-height: 1.45; }
 .mobile-data-panel { display: none; }
 
@@ -267,6 +275,7 @@ input, select {
   .chart-card {
     padding: 12px;
     overflow: hidden;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.05);
   }
   .chart-footer {
     margin-top: 10px;
