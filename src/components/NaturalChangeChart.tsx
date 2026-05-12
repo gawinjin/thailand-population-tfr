@@ -19,7 +19,7 @@ export function NaturalChangeChart() {
       <ResponsiveContainer width="100%" height={isMobile ? 314 : 340}>
         <BarChart
           data={enrichedDemographics}
-          margin={isMobile ? { top: 20, right: 12, left: 0, bottom: 8 } : { top: 24, right: 24, left: 12, bottom: 8 }}
+          margin={isMobile ? { top: 20, right: 12, left: 0, bottom: 16 } : { top: 24, right: 24, left: 12, bottom: 16 }}
         >
           <CartesianGrid strokeDasharray="2 4" stroke="#e1ded5" vertical={false} />
           <XAxis
@@ -31,6 +31,7 @@ export function NaturalChangeChart() {
             tick={{ fontSize: isMobile ? 10 : 12, fill: "#475569" }}
           />
           <YAxis
+            domain={[(dataMin: number) => Math.floor(dataMin * 1.18), (dataMax: number) => Math.ceil(dataMax * 1.18)]}
             tick={{ fontSize: isMobile ? 10 : 12, fill: "#475569" }}
             label={!isMobile ? { value: "Natural change (annual)", angle: -90, position: "insideLeft", offset: 10, style: { fontSize: 11, fill: "#65758b", textAnchor: "middle" } } : undefined}
           />
@@ -43,9 +44,16 @@ export function NaturalChangeChart() {
             <LabelList
               dataKey="natural_change"
               position="top"
-              formatter={(v: number) => `${v >= 0 ? "+" : ""}${Math.round(v / 1000)}k`}
+              formatter={(v: number) => (v >= 0 ? `+${Math.round(v / 1000)}k` : "")}
               fontSize={isMobile ? 9 : 11}
               fill="#475569"
+            />
+            <LabelList
+              dataKey="natural_change"
+              position="bottom"
+              formatter={(v: number) => (v < 0 ? `${Math.round(v / 1000)}k` : "")}
+              fontSize={isMobile ? 9 : 11}
+              fill="#7f3736"
             />
           </Bar>
         </BarChart>
