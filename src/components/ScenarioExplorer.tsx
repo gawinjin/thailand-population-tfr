@@ -35,7 +35,13 @@ export function ScenarioExplorer() {
     <div className="scenario">
       <div className="scenario-controls">
         <label>Starting births<input type="number" value={startBirths} onChange={(e) => setStartBirths(Number(e.target.value))} /></label>
-        <label>Annual birth change {birthRate.toFixed(1)}%<input type="range" min="-12" max="2" step="0.1" value={birthRate} onChange={(e) => setBirthRate(Number(e.target.value))} /></label>
+        <label>Annual birth change {birthRate.toFixed(1)}%
+          <div className="slider-with-stepper">
+            <button type="button" className="stepper" aria-label="decrease" onClick={() => setBirthRate((value) => Math.max(-12, Number((value - 0.1).toFixed(1))))}>−</button>
+            <input type="range" min="-12" max="2" step="0.1" value={birthRate} onChange={(e) => setBirthRate(Number(e.target.value))} />
+            <button type="button" className="stepper" aria-label="increase" onClick={() => setBirthRate((value) => Math.min(2, Number((value + 0.1).toFixed(1))))}>+</button>
+          </div>
+        </label>
         <label>Deaths assumption<select value={deathMode} onChange={(e) => setDeathMode(Number(e.target.value))}><option value={0}>fixed at 559,684</option><option value={1}>increase 1% annually</option><option value={-0.5}>decrease 0.5% annually</option></select></label>
         <label>End year<select value={endYear} onChange={(e) => setEndYear(Number(e.target.value))}><option value={2035}>2035</option><option value={2040}>2040</option></select></label>
         <div className="preset-row">{presets.map((preset) => <button key={preset.label} onClick={() => applyPreset(preset)}>{preset.label}</button>)}</div>
@@ -46,7 +52,7 @@ export function ScenarioExplorer() {
             <CartesianGrid strokeDasharray="3 3" stroke="#e1ded5" />
             <XAxis dataKey="year" interval={isMobile ? 1 : 0} tick={{ fontSize: isMobile ? 11 : 12 }} />
             <YAxis />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip />} trigger="click" />
             {!isMobile ? <Legend /> : null}
             <Bar dataKey="natural_change" name="Natural change" fill="#b44745" opacity={0.34} />
             <Line dataKey="births" name="Projected births" stroke="#2f6f73" strokeWidth={3} dot={false} />

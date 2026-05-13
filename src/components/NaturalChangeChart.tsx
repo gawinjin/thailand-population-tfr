@@ -21,7 +21,7 @@ export function NaturalChangeChart() {
           <CartesianGrid strokeDasharray="3 3" stroke="#e1ded5" />
           <XAxis dataKey="year" interval={isMobile ? 1 : 0} tick={{ fontSize: isMobile ? 11 : 12 }} />
           <YAxis />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip content={<CustomTooltip />} trigger="click" />
           <ReferenceLine y={0} stroke="#475569" />
           <Bar dataKey="natural_change" name="Natural change" onClick={(row) => setSelectedYear(row.year)}>
             {enrichedDemographics.map((row) => (

@@ -34,7 +34,7 @@ export function BirthDeathChart() {
           <CartesianGrid strokeDasharray="3 3" stroke="#e1ded5" />
           <XAxis dataKey="year" interval={isMobile ? 1 : 0} tick={{ fontSize: isMobile ? 11 : 12 }} />
           <YAxis />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip content={<CustomTooltip />} trigger="click" />
           {!isMobile ? <Legend /> : null}
           <ReferenceLine x={2021} stroke="#b44745" label={isMobile ? undefined : { value: "Deaths exceed births", position: "top" }} />
           <Line type="monotone" dataKey="births" name="Registered births" stroke="#2f6f73" strokeWidth={3} dot={{ r: isMobile ? 4 : 3 }} />
