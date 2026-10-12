@@ -25,7 +25,7 @@ export function PopulationStockChart() {
           <CartesianGrid strokeDasharray="3 3" stroke="#e1ded5" />
           <XAxis dataKey="year" interval={isMobile ? 1 : 0} tick={{ fontSize: isMobile ? 11 : 12 }} />
           <YAxis domain={["dataMin - 120000", "dataMax + 80000"]} tickFormatter={(v) => `${(Number(v) / 1000000).toFixed(1)}m`} />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip content={<CustomTooltip />} trigger="click" />
           {showAnnotations ? <ReferenceLine x={2019} stroke="#2f6f73" label={isMobile ? undefined : "Peak stock"} /> : null}
           {showAnnotations ? <ReferenceLine x={2021} stroke="#b44745" label={isMobile ? undefined : "Natural decrease period"} /> : null}
           <Line type="monotone" dataKey="year_end_population" name="Year-end population stock" stroke="#334155" strokeWidth={3} dot={{ r: isMobile ? 4 : 3 }} />

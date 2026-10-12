@@ -35,7 +35,14 @@ export function ScenarioExplorer() {
       <div className="scenario-controls">
         <label>Starting births<input type="number" min="1" value={startBirths} onChange={e => setStartBirths(Number(e.target.value))} /></label>
         <label>Starting year<input type="number" min="2025" max={endYear - 1} value={startYear} onChange={e => setStartYear(Number(e.target.value))} /></label>
-        <label>Annual birth change {birthRate.toFixed(1)}%<input type="range" min="-12" max="2" step="0.1" value={birthRate} onChange={e => setBirthRate(Number(e.target.value))} /></label>
+        <div>
+          <label htmlFor="birth-change-rate">Annual birth change {birthRate.toFixed(1)}%</label>
+          <div className="slider-with-stepper">
+            <button type="button" className="stepper" aria-label="Decrease annual birth change" onClick={() => setBirthRate(value => Math.max(-12, Number((value - 0.1).toFixed(1))))}>-</button>
+            <input id="birth-change-rate" type="range" min="-12" max="2" step="0.1" value={birthRate} onChange={e => setBirthRate(Number(e.target.value))} />
+            <button type="button" className="stepper" aria-label="Increase annual birth change" onClick={() => setBirthRate(value => Math.min(2, Number((value + 0.1).toFixed(1))))}>+</button>
+          </div>
+        </div>
         <label>Birth calculation<select value={method} onChange={e => setMethod(e.target.value as typeof method)}><option value="compound">Compound</option><option value="linear">Linear, floored at zero</option></select></label>
         <label>Deaths assumption<select value={deathMode} onChange={e => setDeathMode(Number(e.target.value))}><option value={0}>Fixed at {formatNumber(latestDemographics.registered_deaths)}</option><option value={1}>Increase 1% annually</option><option value={-0.5}>Decrease 0.5% annually</option></select></label>
         <label>End year<select value={endYear} onChange={e => setEndYear(Number(e.target.value))}><option value={2035}>2035</option><option value={2040}>2040</option></select></label>
@@ -55,7 +62,7 @@ export function ScenarioExplorer() {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="year" interval={isMobile ? 2 : 1} />
             <YAxis tickFormatter={v => `${v / 1000}k`} />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip />} trigger="click" />
             <Legend />
             <ReferenceLine y={0} stroke="#555" />
             <Bar dataKey="natural_change" name="Natural change (people)" fill="#b44745" opacity={0.34} isAnimationActive={false} />

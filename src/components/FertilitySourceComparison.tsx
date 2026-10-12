@@ -56,7 +56,7 @@ export function FertilitySourceComparison() {
             <XAxis dataKey="year" type="number" domain={[2022, 2027]} allowDecimals={false} tick={{ fontSize: isMobile ? 11 : 12 }} />
             <YAxis dataKey="tfr" type="number" domain={[0.65, 1.3]} />
             <ZAxis range={[140, 220]} />
-            <Tooltip content={<TfrTooltip />} />
+            <Tooltip content={<TfrTooltip />} trigger="click" />
             {data.map(entry => <Scatter key={`${entry.source}-${entry.year}`} data={[entry]} name={`${entry.source} (${entry.year})`} fill={entry.status === "unverified" ? "#fff" : colors[entry.type]} stroke={colors[entry.type]} shape={entry.status === "official_compiled" ? "square" : entry.status === "estimated" ? "diamond" : entry.status === "unverified" ? "cross" : "circle"} onClick={() => setSelected(entry)} />)}
           </ScatterChart>
         </ResponsiveContainer>
