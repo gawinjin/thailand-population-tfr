@@ -62,7 +62,9 @@ The primary origin and calculation method of 0.78 remain unverified. A ratio-bas
 
 ## Run and verify
 
-Requires Node.js **22.12+** (Node 24 also supported).
+Requires Node.js **24.x**, matching CI and the Vercel build runtime.
+
+Production builds force a fresh TypeScript check and use bundler module resolution for Vite's package exports. Cached TypeScript metadata cannot skip the configuration check.
 
 ```bash
 npm ci
