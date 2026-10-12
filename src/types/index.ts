@@ -14,6 +14,7 @@ export type DemographicRow = {
   status: DataStatus;
   cutoff: string;
   source_note: string;
+  source_ids: string[];
 };
 
 export type EnrichedDemographicRow = DemographicRow & {
@@ -39,6 +40,8 @@ export type FertilitySource = {
   status: DataStatus;
   cutoff: string;
   note: string;
+  source_id: string | null;
+  verification: string;
 };
 
 export type CauseNode = {

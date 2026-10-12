@@ -15,7 +15,8 @@ export function NaturalChangeChart() {
   const selected = enrichedDemographics.find((row) => row.year === selectedYear)!;
 
   return (
-    <ChartChrome footer={`From 2021 to ${selectedYear}, registered deaths exceeded births by roughly ${formatNumber(Math.abs(cumulative))} people. Registration-based; ${statusLabel(selected.status)}.`}>
+    <ChartChrome footer={selectedYear < 2021 ? `In ${selectedYear}, registered births exceeded deaths by ${formatNumber(selected.natural_change)} people. Sustained natural decrease begins in 2021.` : `From 2021 to ${selectedYear}, registered deaths exceeded births by ${formatNumber(Math.abs(cumulative))} people. Registration-based; ${statusLabel(selected.status)}.`}>
+      <label>Selected year<select value={selectedYear} onChange={event => setSelectedYear(Number(event.target.value))}>{enrichedDemographics.map(row => <option key={row.year}>{row.year}</option>)}</select></label>
       <ResponsiveContainer width="100%" height={isMobile ? 290 : 340}>
         <BarChart data={enrichedDemographics} margin={isMobile ? { top: 12, right: 4, left: -20, bottom: 0 } : undefined}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e1ded5" />
@@ -33,7 +34,7 @@ export function NaturalChangeChart() {
       <div className="mobile-data-panel" aria-live="polite">
         <span>{selectedYear}</span>
         <strong>Natural change {formatNumber(selected.natural_change)}</strong>
-        <small>2021 to {selectedYear}: {formatNumber(cumulative)}</small>
+        <small>{selectedYear >= 2021 ? `2021 to ${selectedYear}: ${formatNumber(cumulative)}` : "Before sustained natural decrease"}</small>
       </div>
     </ChartChrome>
   );

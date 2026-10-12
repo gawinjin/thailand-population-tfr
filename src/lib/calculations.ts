@@ -5,15 +5,17 @@ export function calculateNaturalChange(births: number, deaths: number) {
 }
 
 export function calculateYoY(current: number, previous: number) {
-  if (previous === 0) return 0;
+  if (!Number.isFinite(current) || !Number.isFinite(previous) || previous === 0) return null;
   return ((current - previous) / Math.abs(previous)) * 100;
 }
 
 export function calculateIndex(value: number, base: number) {
+  if (!Number.isFinite(value) || !Number.isFinite(base) || base <= 0) throw new RangeError("Index base must be positive.");
   return (value / base) * 100;
 }
 
 export function calculateApproxCrudeRate(events: number, population: number) {
+  if (!Number.isFinite(events) || events < 0 || !Number.isFinite(population) || population <= 0) throw new RangeError("Events must be nonnegative and population positive.");
   return (events / population) * 1000;
 }
 
@@ -23,6 +25,7 @@ export function projectBirthsCompound(
   startYear: number,
   endYear: number
 ): ProjectionRow[] {
+  validateProjection(startBirths, annualChangeRate, startYear, endYear);
   return Array.from({ length: endYear - startYear + 1 }, (_, index) => ({
     year: startYear + index,
     births: Math.round(startBirths * Math.pow(1 + annualChangeRate, index))
@@ -35,6 +38,7 @@ export function projectDeathsCompound(
   startYear: number,
   endYear: number
 ): ProjectionRow[] {
+  validateProjection(startDeaths, annualChangeRate, startYear, endYear);
   return Array.from({ length: endYear - startYear + 1 }, (_, index) => ({
     year: startYear + index,
     births: 0,
@@ -51,6 +55,7 @@ export function estimateBirthsFromTfrRatio(
   targetTfr: number,
   benchmarkTfr: number
 ) {
+  if (![benchmarkBirths, targetTfr, benchmarkTfr].every(value => Number.isFinite(value) && value > 0)) throw new RangeError("Births and TFR inputs must be positive.");
   return benchmarkBirths * targetTfr / benchmarkTfr;
 }
 
@@ -66,6 +71,7 @@ export function findThresholdYear(series: Array<{ year: number; births: number }
 }
 
 export function enrichDemographics(rows: DemographicRow[]): EnrichedDemographicRow[] {
+  if (!rows.length) return [];
   const baseBirths = rows[0].registered_births;
   const baseDeaths = rows[0].registered_deaths;
   return rows.map((row, index) => {
@@ -89,9 +95,18 @@ export function buildProjection(
   birthChangeRate: number,
   deathChangeRate: number,
   startYear: number,
-  endYear: number
+  endYear: number,
+  method: "compound" | "linear" = "compound",
+  firstYearBirths?: number
 ) {
-  const births = projectBirthsCompound(startBirths, birthChangeRate, startYear, endYear);
+  validateProjection(startBirths, birthChangeRate, startYear, endYear);
+  if (firstYearBirths !== undefined && (!Number.isFinite(firstYearBirths) || firstYearBirths < 0)) throw new RangeError("First-year births must be nonnegative.");
+  const births = Array.from({ length: endYear - startYear + 1 }, (_, index) => {
+    const base = firstYearBirths ?? startBirths;
+    const elapsed = firstYearBirths === undefined ? index : index - 1;
+    const value = method === "linear" ? base * (1 + birthChangeRate * elapsed) : base * (1 + birthChangeRate) ** elapsed;
+    return { year: startYear + index, births: index === 0 ? startBirths : Math.max(0, Math.round(value)) };
+  });
   const deaths = projectDeathsCompound(startDeaths, deathChangeRate, startYear, endYear);
   return births.map((row, index) => {
     const deathCount = deaths[index].deaths ?? startDeaths;
@@ -102,4 +117,11 @@ export function buildProjection(
       natural_change: calculateNaturalChange(row.births, deathCount)
     };
   });
+}
+
+function validateProjection(start: number, rate: number, startYear: number, endYear: number) {
+  if (!Number.isFinite(start) || start < 0 || !Number.isFinite(rate) || rate < -1 ||
+    !Number.isInteger(startYear) || !Number.isInteger(endYear) || endYear < startYear || endYear - startYear > 100) {
+    throw new RangeError("Invalid projection inputs.");
+  }
 }

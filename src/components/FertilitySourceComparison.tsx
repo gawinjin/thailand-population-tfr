@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
-import { CartesianGrid, Cell, Legend, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis } from "recharts";
+import { CartesianGrid, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis } from "recharts";
 import { fertilitySources } from "../data/fertilitySources";
+import { sourceRegistry } from "../data/sourceRegistry";
 import { useMediaQuery } from "../lib/useMediaQuery";
 import type { FertilitySource } from "../types";
 import { ChartChrome } from "./ChartChrome";
@@ -56,14 +57,13 @@ export function FertilitySourceComparison() {
             <YAxis dataKey="tfr" type="number" domain={[0.65, 1.3]} />
             <ZAxis range={[140, 220]} />
             <Tooltip content={<TfrTooltip />} />
-            {!isMobile ? <Legend /> : null}
-            <Scatter data={data} name="Source-discontinuous TFR estimates" onClick={(row) => setSelected(row)}>
-              {data.map((entry) => (
-                <Cell key={`${entry.source}-${entry.tfr}`} fill={colors[entry.type]} stroke={entry.status === "unverified" ? "#111827" : colors[entry.type]} strokeDasharray={entry.status === "unverified" ? "3 3" : undefined} />
-              ))}
-            </Scatter>
+            {data.map(entry => <Scatter key={`${entry.source}-${entry.year}`} data={[entry]} name={`${entry.source} (${entry.year})`} fill={entry.status === "unverified" ? "#fff" : colors[entry.type]} stroke={colors[entry.type]} shape={entry.status === "official_compiled" ? "square" : entry.status === "estimated" ? "diamond" : entry.status === "unverified" ? "cross" : "circle"} onClick={() => setSelected(entry)} />)}
           </ScatterChart>
         </ResponsiveContainer>
+        <p className="source-line">Square: official compilation; diamond: estimate; circle: international benchmark; outlined cross: unverified.</p>
+        <label>Inspect TFR source<select value={`${selected.source}|${selected.year}`} onChange={event => setSelected(data.find(row => `${row.source}|${row.year}` === event.target.value)!)}>
+          {data.map(row => <option key={`${row.source}|${row.year}`} value={`${row.source}|${row.year}`}>{row.year} | {row.source} | {row.tfr}</option>)}
+        </select></label>
         <div className="mobile-data-panel" aria-live="polite">
           <span>{selected.year}</span>
           <strong>{selected.source}: TFR {selected.tfr}</strong>
@@ -80,8 +80,10 @@ export function FertilitySourceComparison() {
           <dt>Confidence</dt><dd>{selected.confidence.replaceAll("_", " ")}</dd>
         </dl>
         <p>{selected.note}</p>
+        <p><b>Verification:</b> {selected.verification}</p>
+        {selected.source_id ? <a href={sourceRegistry.find(source => source.id === selected.source_id)?.url} target="_blank" rel="noreferrer">Open original source</a> : <p>No verified primary source.</p>}
         <div className="verdict">
-          <strong>Best-supported current benchmark: 0.86, Mahidol IPSR Population Gazette 2026.</strong>
+          <strong>Current expert benchmark retained: 0.86, Mahidol IPSR Population Gazette 2026.</strong>
           <span>0.78: unverified social-media extrapolation. Keep it out of official charts except as a clearly labeled stress test.</span>
         </div>
       </aside>

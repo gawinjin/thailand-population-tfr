@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   color: #1f2933;
@@ -20,7 +18,7 @@ a { color: #245d63; }
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  padding: 12px 0;
+  padding: 12px max(24px, calc((100% - 1132px) / 2));
   background: rgba(247, 245, 239, 0.94);
   border-bottom: 1px solid #ded8ca;
 }
@@ -54,8 +52,8 @@ a { color: #245d63; }
 }
 
 h1, h2, h3 { letter-spacing: 0; line-height: 1.06; margin: 0; }
-h1 { font-size: clamp(46px, 7vw, 86px); max-width: 860px; }
-h2 { font-size: clamp(28px, 4vw, 48px); max-width: 850px; }
+h1 { font-size: 64px; max-width: 860px; }
+h2 { font-size: 38px; max-width: 850px; }
 h3 { font-size: 21px; margin-bottom: 12px; }
 .subtitle { font-size: 26px; color: #475569; margin: 16px 0 0; }
 .lede { font-size: 19px; line-height: 1.6; color: #334155; max-width: 760px; }
@@ -98,6 +96,20 @@ h3 { font-size: 21px; margin-bottom: 12px; }
   margin-bottom: 12px;
 }
 .wrap { flex-wrap: wrap; }
+.preset-row, .download-row { flex-wrap: wrap; }
+.scenario-controls, .calc-controls, .chart-card, .split > *, .scenario > * { min-width: 0; }
+.review-note { border-left: 3px solid #2f6f73; padding: 12px 20px; margin-bottom: 24px; background: #eef5f4; line-height: 1.6; }
+details summary { cursor: pointer; font-weight: 700; }
+details ul { list-style: disc; padding-left: 22px; margin: 12px 0; }
+.table-scroll { overflow-x: auto; max-width: 100%; margin-top: 18px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
+caption { text-align: left; padding: 12px 0; color: #52616a; }
+td, th { padding: 10px 12px; border-bottom: 1px solid #d6dfe0; text-align: right; }
+th:first-child { text-align: left; }
+td a { display: inline-block; min-width: 150px; }
+thead { background: #edf1f2; }
+:focus-visible { outline: 3px solid #2f6f73; outline-offset: 3px; }
+section { scroll-margin-top: 70px; }
 button {
   border: 1px solid #c9c1b2;
   background: #fffdf8;
@@ -228,7 +240,7 @@ input, select {
   .hero, .section { padding-left: 16px; padding-right: 16px; }
   .topnav {
     gap: 8px;
-    margin: 0 -16px;
+    margin: 0;
     padding: 10px 16px;
     scrollbar-width: none;
   }

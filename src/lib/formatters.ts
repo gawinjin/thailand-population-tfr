@@ -7,12 +7,12 @@ export const rateFormatter = new Intl.NumberFormat("en-US", {
 });
 
 export function formatNumber(value: number | null | undefined) {
-  if (value === null || value === undefined || Number.isNaN(value)) return "n/a";
+  if (value === null || value === undefined || !Number.isFinite(value)) return "n/a";
   return numberFormatter.format(Math.round(value));
 }
 
 export function formatPercent(value: number | null | undefined) {
-  if (value === null || value === undefined || Number.isNaN(value)) return "n/a";
+  if (value === null || value === undefined || !Number.isFinite(value)) return "n/a";
   return `${value > 0 ? "+" : ""}${oneDecimalFormatter.format(value)}%`;
 }
 

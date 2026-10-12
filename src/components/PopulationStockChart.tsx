@@ -16,7 +16,7 @@ export function PopulationStockChart() {
   const selected = enrichedDemographics.find((row) => row.year === selectedYear) ?? latest;
 
   return (
-    <ChartChrome footer={`Peak registered stock: ${formatNumber(peak.year_end_population)} in ${peak.year}. Decline to 2025: ${formatNumber(decline)}.`}>
+    <ChartChrome footer={`Peak registered stock: ${formatNumber(peak.year_end_population)} in ${peak.year}. Decline to 2025: ${formatNumber(decline)}. NSO 2026 table 1.3 flags administrative corrections in 2020. Stock changes also include migration and register adjustments; they are not simply births minus deaths.`}>
       <div className="control-row">
         <button className={showAnnotations ? "active" : ""} onClick={() => setShowAnnotations(!showAnnotations)}>Toggle annotations</button>
       </div>

@@ -1,0 +1,38 @@
+import { expect, test } from "@playwright/test";
+
+test("evidence, scenarios and downloads remain usable", async ({ page }, testInfo) => {
+  const errors: string[] = [];
+  page.on("pageerror", error => errors.push(error.message));
+  await page.goto("/");
+  await expect(page.getByRole("heading", { name: "Thailand's fertility collapse" })).toBeVisible();
+  await expect(page.locator("#review")).toContainText("2026-10-12");
+  await page.screenshot({ path: testInfo.outputPath("overview.png") });
+  await page.locator("#review").screenshot({ path: testInfo.outputPath("review.png") });
+  await page.getByRole("button", { name: "2024 maternal age", exact: true }).click();
+  await expect(page.locator("#review")).toContainText("441,631");
+  await page.getByRole("button", { name: "Annual data table", exact: true }).click();
+  await expect(page.locator("#review")).toContainText("703,003");
+  await page.locator("#natural-change").getByLabel("Selected year").selectOption("2018");
+  await expect(page.locator("#natural-change .chart-footer")).not.toContainText("From 2021 to 2018");
+  await page.getByLabel("Benchmark TFR", { exact: true }).fill("0");
+  await expect(page.locator("#stress-test").getByRole("alert")).toBeVisible();
+  await page.getByLabel("Benchmark TFR", { exact: true }).fill("0.86");
+  await page.getByRole("button", { name: "0.78 unverified first year", exact: true }).click();
+  await expect(page.locator("#scenarios")).toContainText("338,302");
+  await expect(page.locator("#scenarios").getByRole("slider")).toHaveValue("-4");
+  await page.getByLabel("Selected scenario year").selectOption("2027");
+  await expect(page.locator("#scenarios")).toContainText("324,770");
+  await page.getByLabel("Starting births", { exact: true }).fill("0");
+  await expect(page.locator("#scenarios").getByRole("alert")).toBeVisible();
+  await page.getByLabel("Starting births", { exact: true }).fill("416574");
+  await page.locator("#scenarios").screenshot({ path: testInfo.outputPath("scenarios.png") });
+  await page.getByLabel("Inspect TFR source").selectOption("World Bank / WDI|2024");
+  await expect(page.locator("#tfr .inspector")).toContainText("1.204");
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download JSON", exact: true }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toBe("thailand-fertility-data.json");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  expect(errors).toEqual([]);
+  await page.screenshot({ path: testInfo.outputPath("dashboard.png"), fullPage: true });
+});

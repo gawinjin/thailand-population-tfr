@@ -3,6 +3,7 @@ import ReactFlow, { Background, Controls, Edge, Node } from "reactflow";
 import { causeEdges, causeNodes } from "../data/causeNetwork";
 import { useMediaQuery } from "../lib/useMediaQuery";
 import type { CauseNode } from "../types";
+import { policyLevers } from "../data/policyLevers";
 
 const layerX: Record<CauseNode["layer"], number> = { surface: 40, structural: 310, deep: 310, outcome: 600, feedback: 820 };
 const layerY: Record<string, number> = {
@@ -83,10 +84,10 @@ export function CauseNetwork() {
         <p className="eyebrow">{selected.layer} cause</p>
         <h3>{selected.label}</h3>
         <dl>
-          <dt>Evidence strength</dt><dd>{selected.evidence_strength.replace("_", " ")}</dd>
+          <dt>Editorial evidence rating</dt><dd>{selected.evidence_strength.replace("_", " ")}</dd>
           <dt>Source family</dt><dd>Policy research, official statistics context, demographic interpretation</dd>
           <dt>Uncertainty</dt><dd>Causal strength varies by household, region, class, gender and cohort.</dd>
-          <dt>Policy levers</dt><dd>See policy lever section; no single lever is expected to restore replacement fertility.</dd>
+          <dt>Policy levers</dt><dd>{policyLevers.filter(lever => lever.target.includes(selected.id)).map(lever => lever.title).join(", ") || "Several mechanisms interact; no single direct lever."}</dd>
         </dl>
         <p>{selected.description}</p>
       </aside>

@@ -1,17 +1,29 @@
-import { enrichDemographics } from "../lib/calculations";
+import { calculateNaturalChange, enrichDemographics } from "../lib/calculations";
 import type { DemographicRow } from "../types";
 
-export const demographicRows: DemographicRow[] = [
-  { year: 2016, registered_births: 704058, registered_deaths: 480434, natural_change: 223624, year_end_population: 65931550, status: "official_compiled", cutoff: "2016-12-31", source_note: "NSO Statistical Yearbook / DOPA registration" },
-  { year: 2017, registered_births: 702755, registered_deaths: 468911, natural_change: 233844, year_end_population: 66188503, status: "official_compiled", cutoff: "2017-12-31", source_note: "NSO Statistical Yearbook / DOPA registration" },
-  { year: 2018, registered_births: 666109, registered_deaths: 473541, natural_change: 192568, year_end_population: 66413979, status: "official_compiled", cutoff: "2018-12-31", source_note: "NSO Statistical Yearbook / DOPA registration" },
-  { year: 2019, registered_births: 618193, registered_deaths: 506211, natural_change: 111982, year_end_population: 66558935, status: "official_compiled", cutoff: "2019-12-31", source_note: "NSO Statistical Yearbook / DOPA registration" },
-  { year: 2020, registered_births: 587368, registered_deaths: 501438, natural_change: 85930, year_end_population: 66186727, status: "official_compiled", cutoff: "2020-12-31", source_note: "NSO Statistical Yearbook / DOPA registration" },
-  { year: 2021, registered_births: 544570, registered_deaths: 563650, natural_change: -19080, year_end_population: 66171439, status: "official_compiled", cutoff: "2021-12-31", source_note: "NSO Statistical Yearbook / DOPA registration" },
-  { year: 2022, registered_births: 502107, registered_deaths: 595965, natural_change: -93858, year_end_population: 66090475, status: "official_compiled", cutoff: "2022-12-31", source_note: "NSO Statistical Yearbook / DOPA registration" },
-  { year: 2023, registered_births: 517934, registered_deaths: 565992, natural_change: -48058, year_end_population: 66052615, status: "official_compiled", cutoff: "2023-12-31", source_note: "NSO Statistical Yearbook / DOPA registration" },
-  { year: 2024, registered_births: 462240, registered_deaths: 571646, natural_change: -109406, year_end_population: 65951210, status: "official_compiled", cutoff: "2024-12-31", source_note: "NSO Statistical Yearbook / DOPA registration" },
-  { year: 2025, registered_births: 416574, registered_deaths: 559684, natural_change: -143110, year_end_population: 65809011, status: "current_dopa_cited_provisional", cutoff: "2025-12-31", source_note: "DOPA/BORA provisional year-end registration count cited by current Thai reporting; verify against finalized MOPH/NSO yearbook when published" }
+// Events: NSO 2025 figure 1.1 (2016-24), NSO 2026 figure 1.1 (2025).
+// Stocks: NSO 2026 table 1.3. Keep registration events separate from MOPH live births.
+const registrationSeries = [
+  [2016, 704058, 480434, 65931550],
+  [2017, 703003, 468911, 66188503],
+  [2018, 666366, 473541, 66413979],
+  [2019, 618205, 506211, 66558935],
+  [2020, 587368, 501438, 66186727],
+  [2021, 544570, 563650, 66171439],
+  [2022, 502107, 595965, 66090475],
+  [2023, 517934, 565992, 66052615],
+  [2024, 462240, 571646, 65951210],
+  [2025, 416574, 559684, 65809011]
 ];
 
+export const demographicRows: DemographicRow[] = registrationSeries.map(([year, births, deaths, population]) => ({
+  year, registered_births: births, registered_deaths: deaths,
+  natural_change: calculateNaturalChange(births, deaths),
+  year_end_population: population, status: "official_compiled",
+  cutoff: `${year}-12-31`,
+  source_ids: year === 2025 ? ["nso_yearbook_2026"] : ["nso_registration_2025", "nso_yearbook_2026"],
+  source_note: `NSO ${year === 2025 ? "2026" : "2025"} yearbook figure 1.1, DOPA registration events; stock: NSO 2026 table 1.3. Reviewed 2026-10-12.${year === 2020 ? " Stock includes administrative record corrections; the drop is not solely natural change." : ""}`
+}));
+
 export const enrichedDemographics = enrichDemographics(demographicRows);
+export const latestDemographics = demographicRows.at(-1)!;

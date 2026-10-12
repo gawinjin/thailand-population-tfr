@@ -21,7 +21,7 @@ export function BirthDeathChart() {
   const metricFormatter = mode === "yoy" ? formatPercent : formatNumber;
 
   return (
-    <ChartChrome footer="Hover or tap for source note, status, cutoff and natural change. Approximate rates are available in the source table below.">
+    <ChartChrome footer="NSO 2025/2026 yearbooks / DOPA. Official compiled registration data through 2025. Approximate rates use year-end population; see the data table.">
       <div className="control-row">
         {(["absolute", "index", "yoy"] as Mode[]).map((item) => (
           <button className={mode === item ? "active" : ""} onClick={() => setMode(item)} key={item}>
@@ -34,7 +34,7 @@ export function BirthDeathChart() {
           <CartesianGrid strokeDasharray="3 3" stroke="#e1ded5" />
           <XAxis dataKey="year" interval={isMobile ? 1 : 0} tick={{ fontSize: isMobile ? 11 : 12 }} />
           <YAxis />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip content={<CustomTooltip mode={mode} />} />
           {!isMobile ? <Legend /> : null}
           <ReferenceLine x={2021} stroke="#b44745" label={isMobile ? undefined : { value: "Deaths exceed births", position: "top" }} />
           <Line type="monotone" dataKey="births" name="Registered births" stroke="#2f6f73" strokeWidth={3} dot={{ r: isMobile ? 4 : 3 }} />
@@ -45,6 +45,7 @@ export function BirthDeathChart() {
         <span>{selected.year}</span>
         <strong>Births {metricFormatter(selected.births)} / deaths {metricFormatter(selected.deaths)}</strong>
         <small>Natural change {formatNumber(selected.natural_change)}</small>
+        <small>{selected.status.replaceAll("_", " ")} | {selected.cutoff} | {selected.source_note}</small>
       </div>
     </ChartChrome>
   );

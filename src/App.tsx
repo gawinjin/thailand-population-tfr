@@ -1,5 +1,5 @@
 import { BirthDeathChart } from "./components/BirthDeathChart";
-import { CauseNetwork } from "./components/CauseNetwork";
+import { lazy, Suspense } from "react";
 import { ClaimStressTester } from "./components/ClaimStressTester";
 import { DataGaps } from "./components/DataGaps";
 import { DownloadData } from "./components/DownloadData";
@@ -12,11 +12,19 @@ import { PopulationStockChart } from "./components/PopulationStockChart";
 import { ScenarioExplorer } from "./components/ScenarioExplorer";
 import { Section } from "./components/Section";
 import { SourceRegistry } from "./components/SourceRegistry";
+import { ResearchUpdate } from "./components/ResearchUpdate";
+const CauseNetwork = lazy(() => import("./components/CauseNetwork").then(module => ({ default: module.CauseNetwork })));
 
 export function App() {
   return (
     <main>
+      <nav className="topnav" aria-label="Section navigation">
+        {[["review", "Latest review"], ["trends", "Trends"], ["tfr", "TFR"], ["stress-test", "Stress test"], ["causes", "Causes"], ["scenarios", "Scenarios"], ["sources", "Sources"]].map(([id, label]) => <a key={id} href={`#${id}`}>{label}</a>)}
+      </nav>
       <HeroStats />
+      <Section id="review" eyebrow="October 2026 evidence review" question="What has changed in the evidence?">
+        <ResearchUpdate />
+      </Section>
       <Section id="trends" eyebrow="Birth and death trends" question="When did Thailand cross from natural increase to natural decrease?" note="Toggle between counts, index and year-on-year change. Hover any year to inspect status, cutoff and source notes.">
         <BirthDeathChart />
       </Section>
@@ -32,8 +40,8 @@ export function App() {
       <Section id="stress-test" eyebrow="0.78 claim stress test" question="Is a 0.78 TFR claim data, projection, or viral extrapolation?" note="The 0.78 figure is not validated as Thailand's official 2026 fertility rate. Treat it only as an unverified stress test unless a primary source is found.">
         <ClaimStressTester />
       </Section>
-      <Section id="causes" eyebrow="Cause system map" question="Is the cause simply that people do not want children?" note="The surface story is cost of living. The deeper story is that family formation has become a high-risk household project.">
-        <CauseNetwork />
+      <Section id="causes" eyebrow="Cause system map" question="Is the cause simply that people do not want children?" note="A conceptual synthesis of possible mechanisms. Evidence-strength labels are editorial assessments, not measured causal effects.">
+        <Suspense fallback={<p>Loading cause map...</p>}><CauseNetwork /></Suspense>
       </Section>
       <Section id="scenarios" eyebrow="Scenario explorer" question="Where could births and natural change head by 2030, 2035 and 2040?" note="Thailand must plan for mitigation and adaptation: making family formation less punishing while preparing for an older, more care-intensive society.">
         <ScenarioExplorer />
