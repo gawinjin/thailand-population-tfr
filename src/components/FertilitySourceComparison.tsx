@@ -37,10 +37,15 @@ export function FertilitySourceComparison() {
   const isMobile = useMediaQuery("(max-width: 620px)");
   const types = useMemo(() => ["all", ...Array.from(new Set(fertilitySources.map((item) => item.type)))], []);
   const data = filter === "all" ? fertilitySources : fertilitySources.filter((item) => item.type === filter);
-  const trajectory = useMemo(
+  const byYear = (a: FertilitySource, b: FertilitySource) => a.year - b.year;
+  const wdiSeries = useMemo(
+    () => fertilitySources.filter((item) => item.type === "international_harmonized_estimate").sort(byYear),
+    []
+  );
+  const domesticSeries = useMemo(
     () => fertilitySources
-      .filter((item) => item.status !== "unverified")
-      .sort((a, b) => a.year - b.year),
+      .filter((item) => item.type === "thai_official_compilation" || item.type === "expert_estimate_projection")
+      .sort(byYear),
     []
   );
 
@@ -65,9 +70,9 @@ export function FertilitySourceComparison() {
             <XAxis
               dataKey="year"
               type="number"
-              domain={[2014, 2027]}
+              domain={[2017, 2027]}
               allowDecimals={false}
-              ticks={[2015, 2017, 2019, 2021, 2023, 2025, 2027]}
+              ticks={[2018, 2020, 2022, 2024, 2026]}
               tick={{ fontSize: isMobile ? 10 : 12, fill: "#475569" }}
               height={isMobile ? 34 : 30}
             />
@@ -88,12 +93,23 @@ export function FertilitySourceComparison() {
             />
             <Line
               type="monotone"
-              data={trajectory}
+              data={wdiSeries}
               dataKey="tfr"
-              stroke="#245d63"
+              name="World Bank / WDI series"
+              stroke="#7a6a43"
               strokeWidth={2}
               dot={false}
-              legendType="none"
+              isAnimationActive={false}
+            />
+            <Line
+              type="linear"
+              data={domesticSeries}
+              dataKey="tfr"
+              name="Thai official + Mahidol estimates"
+              stroke="#245d63"
+              strokeWidth={2}
+              strokeDasharray="5 4"
+              dot={false}
               isAnimationActive={false}
             />
             {!isMobile ? <Legend wrapperStyle={{ paddingTop: 8 }} /> : null}
